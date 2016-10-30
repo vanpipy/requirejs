@@ -60,3 +60,14 @@ __Guess got an answer.__
 __It's still some question box needed to open...__
 
 Time at 01/18 2015 maybe 11:--. 
+
+Now tow part
+1. request
+    + `request([a, b], (fnA, fnB) => {}) -> function` 
+
+2. define
+    + `define(fn) -> module function`
+
+
+
+
