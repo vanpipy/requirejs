@@ -2,7 +2,7 @@
 
 
 var request = (function (global) {
-    nodeName = 'script';
+    var nodeName = 'script';
 
     function createNode () {
         return document.createElement(nodeName);
