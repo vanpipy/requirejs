@@ -12,3 +12,7 @@ window.onload = function () {
     var seconds = new Date().getTime();
     console.log(seconds, seconds - date.getTime());
 }
+
+request(['a.js', 'b.js'], function (a, b) {
+    
+});
