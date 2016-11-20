@@ -8,12 +8,15 @@ var request = (function (global, root, ready, context) {
     function createNode (url) {
         var node = root.createElement(nodeName);
         node.src = url;
-        checkLoaded(node);
         return node;
     }
 
-    function appendToHead (node) {
-        HEAD.appendChild(node);
+    // void
+    // Make a mark index to cache node infomation.
+    function markNode (node) {
+        var keyName = splitKey(node.url);
+        context.modules = context.modules || {};
+        context.module[keyName].node = node;
     }
 
     function checkLoaded (node) {
@@ -27,6 +30,15 @@ var request = (function (global, root, ready, context) {
         };
     }
 
+    function appendToHead (node) {
+        HEAD.appendChild(node);
+    }
+
+    function splitKey (url) {
+        var result = /([a-zA-Z0-9]+)\.js$/.exec(url);
+        return result ? result[1] : result;
+    }
+
     function map (array) {
         return function (todo) {
             return array.map(todo);
@@ -34,8 +46,10 @@ var request = (function (global, root, ready, context) {
     }
 
     // void
+    // node flow; create > mark > check > append
     function createReqsNode (stringKey) {
         var node = createNode(stringKey);
+        checkLoaded(node);
         appendToHead(node);
     }
 

@@ -1,5 +1,6 @@
 'use strict';
 
 var context = {
-    modules: []
+    config: {},
+    modules: {}
 };
