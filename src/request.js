@@ -1,7 +1,11 @@
 'use strict';
 
-var request = (function (global, root, ready, context) {
+var requestConfig;
+var request = (function (global, root, ready, context, config) {
     var HEAD = root.head;
+
+    var _urls = config.urls;
+    var _baseUrl = config.baseUrl || './';
     var nodeName = 'script';
 
     // string -> documentElement
@@ -34,9 +38,16 @@ var request = (function (global, root, ready, context) {
         HEAD.appendChild(node);
     }
 
+    function isKeyName (url) {
+        return !/[a-zA-Z0-9_]+\.js$/.test(url);
+    }
     function splitKey (url) {
-        var result = /([a-zA-Z0-9]+)\.js$/.exec(url);
+        var result = /([a-zA-Z0-9_]+)\.js$/.exec(url);
         return result ? result[1] : result;
+    }
+
+    function composeBaseUrl (url) {
+        return _baseUrl + url;
     }
 
     function map (array) {
@@ -48,7 +59,8 @@ var request = (function (global, root, ready, context) {
     // void
     // node flow; create > mark > check > append
     function createReqsNode (stringKey) {
-        var node = createNode(stringKey);
+        var path = isKeyName(stringKey) ? _urls[stringKey] : stringKey;
+        var node = createNode(path);
         checkLoaded(node);
         appendToHead(node);
     }
@@ -57,9 +69,9 @@ var request = (function (global, root, ready, context) {
         return map(reqArray)(createReqsNode);
     }
 
-    return function (reqArray) {
+    return function (reqArray, fn) {
         ready(function() {
             main(reqArray);
         });
     };
-})(window, document, ready, context);
+})(window, document, ready, context, requestConfig || {});

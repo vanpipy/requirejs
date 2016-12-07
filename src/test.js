@@ -13,6 +13,6 @@ window.onload = function () {
     console.log(seconds, seconds - date.getTime());
 }
 
-request(['a.js', 'b.js'], function (a, b) {
-    
+request(['a', 'b'], function (a, b) {
+
 });
