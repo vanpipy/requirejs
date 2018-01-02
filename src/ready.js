@@ -4,9 +4,9 @@ var ready = (function(global, rootElement) {
     // it is include the element img, but the large img block the loading process
     // what happened? Only hang on.
     //
-    // So there is a better way to avoid situation block.
+    // So there is a better way to avoid the block situation.
     // Event - DOMContentLoaded
-    // Every element loaded before every resouce especially large resoure like image.
+    // Every element loaded before every resource especially large resource like image.
     function IEContentLoaded (fn) {
         var d = rootElement, done = false;
 
@@ -40,7 +40,7 @@ var ready = (function(global, rootElement) {
         if (global.addEventListener) {
             rootElement.addEventListener('DOMContentLoaded', function () {
                 //Remove it after occured to avoid the recall.
-                rootElement.addEventListener('DOMContentLoaded', arguments.callee, false);
+                rootElement.removeEventListener('DOMContentLoaded', arguments.callee, false);
 
                 try {
                     callback()
