@@ -23,14 +23,11 @@ var request = (function (global, root, ready, context, config) {
         context.module[keyName].node = node;
     }
 
-    function checkLoaded (node) {
-        node._loaded = false;
-
+    function checkLoaded (node, nextNode) {
         //TODO: Check valid script status - maybe need to set something or not?
         //      And set timeout error message.
         node.onload = function (event) {
-            node._loaded = true;
-
+            appendToHead(nextNode);
         };
     }
 
@@ -50,23 +47,30 @@ var request = (function (global, root, ready, context, config) {
         return _baseUrl + url;
     }
 
-    function map (array) {
-        return function (todo) {
-            return array.map(todo);
-        };
-    }
-
-    // void
     // node flow; create > mark > check > append
     function createReqsNode (stringKey) {
         var path = isKeyName(stringKey) ? _urls[stringKey] : stringKey;
         var node = createNode(path);
-        checkLoaded(node);
-        appendToHead(node);
+
+        return node;
     }
 
     function main (reqArray) {
-        return map(reqArray)(createReqsNode);
+        var previousNode = createReqsNode(reqArray[0]);
+        appendToHead(previousNode);
+
+        var i = 1;
+
+        while (i < reqArray.length) {
+            var nextNode = createReqsNode(reqArray[i]);
+            checkLoaded(previousNode, nextNode);
+            previousNode = nextNode;
+
+            i++;
+        }
+
+        previousNode = undefined;
+        nextNode = undefined;
     }
 
     return function (reqArray, fn) {
